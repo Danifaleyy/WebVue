@@ -1,0 +1,63 @@
+<template>
+    <section>
+        <h3></h3>
+        <h3>Personal</h3>
+        <div>
+            <button class="btn btn-sm btn-outline-primary">
+                Agregar <i class="fa fa-plus"></i>
+            </button>
+        </div>
+    </section>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Clave</th>
+                <th>Nombre</th>
+                <th>Direccion</th>
+                <th>Telefono</th>
+                <th>Estatus</th>
+            </tr>
+        </thead>
+        <!--Debemos traer los datos de la base de datos, en api, se instala: npm install axios -save-->
+        <tbody>
+            <!--Cuando no trae datos-->
+            <tr v-if="personal.length == 0">
+                <td class="centrado" colspan="6">Sin personal registrado</td>
+            </tr>
+            <!--Ciclo for para que muestere tantos como sean-->
+            <tr v-else v-for="(persona,index) in personal" :key="index">
+                <td>{{ persona.id }}</td>
+                <td>{{ persona.nombre }}</td>
+                <td>{{ persona.direccion }}</td>
+                <td>{{ persona.telefono }}</td>
+                <td>{{ persona.estatus }}</td>
+            </tr>
+        </tbody>
+    </table>
+</template>
+
+
+<script setup lang="ts">
+    import { onMounted } from 'vue'
+    import {usePersonal} from '../controladores/usePersonal.ts'
+    const { traePersonal,personal } = usePersonal()
+    //Cuando la pagina es visible y esta cargada
+    onMounted(async () => {
+        await traePersonal()
+    })
+    //load <----- Carga en memoria
+    //mounted <----- Cargada y se ve en la pantala
+</script>
+
+<style scoped>
+    .section {
+        display: flex;
+        flex-flow: row wrap;
+        justify-content: space-around;
+        margin-top: 20px;
+    }
+    .centrado {
+        text-align: center;
+    }
+
+</style>
