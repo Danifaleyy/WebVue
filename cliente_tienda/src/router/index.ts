@@ -1,3 +1,4 @@
+import PersonalAgregarVue from '@/modulos/personal/vistas/PersonalAgregarVue.vue'
 import PersonalVue from '@/modulos/personal/vistas/PersonalVue.vue'
 import { createRouter, createWebHistory } from 'vue-router'
 
@@ -15,6 +16,12 @@ const router = createRouter({
       path: '/personal',
       name: 'personal',
       component: PersonalVue,
+    },
+    //Ruta para agregar un nuevo registro en Personal
+    {
+      path: '/personal/agregar',
+      name: 'personalagregar',
+      component: PersonalAgregarVue,
     },
   ],
 })
