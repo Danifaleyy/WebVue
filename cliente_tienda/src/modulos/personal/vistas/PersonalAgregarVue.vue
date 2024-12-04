@@ -5,35 +5,65 @@
             <div class="card-header">
                 <h4>Agregar Personal</h4>
             </div>
+            <div v-if="mensaje == 1" class="alert alert-success" role="alert" >
+                Datos agregados con exito
+            </div>
             <div class="card-body">
-                <div class="mb-3">
-                    Nombre
-                    <input type="text" class="form-control">
-                </div>
-                <div class="mb-3">
-                    Direccion
-                    <input type="text" class="form-control">
-                </div>
-                <div class="mb-3">
-                    Telefono
-                    <input type="text" class="form-control">
-                </div>
-                <div class="mb-3">
-                    Estatus
-                    <input type="text" class="form-control">
-                </div>
-                <div class="mb-3">
-                    <button class="btn btn-primary">Agregar</button>
-                </div>
+                <Form :validation-schema="PersonalSchema" @submit="onTodoBien">
+                    <div class="mb-3">
+                        Nombre
+                        <!--v-model=: Es para conectarlo, te permite usar ts en HTML-->
+                        <Field name="nombre" type="text" class="form-control" v-model="personal.nombre"/>
+                        <ErrorMessage name="nombre" class="errorValidacion"/>
+                    </div>
+                    <div class="mb-3">
+                        Direccion
+                        <Field name="direccion" input type="text" class="form-control" v-model="personal.direccion"/>
+                        <ErrorMessage name="direccion" class="errorValidacion"/>
+                    </div>
+                    <div class="mb-3">
+                        Telefono
+                        <Field name="telefono" input type="text" class="form-control" v-model="personal.telefono"/>
+                        <ErrorMessage name="telefono" class="errorValidacion"/>
+                    </div>
+                    <div class="mb-3">
+                        Estatus
+                        <Field name="estatus" input type="text" class="form-control" v-model="personal.estatus"/>
+                        <ErrorMessage name="estatus" class="errorValidacion"/>
+                    </div>
+                    <div class="mb-3">
+                        <!--<Field name="nombre" button class="btn btn-primary" @click="agregarPersonal(personal)">Agregar</Field>-->
+                        <button class="btn btn-primary" type="submit">Agregar</button>
+                    </div>
+                </Form>
             </div>
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue';
+import type { PersonalAgregar } from '../interfaces/personal-interfaces';
+import { usePersonal } from '../controladores/usePersonal';
+const { agregarPersonal, mensaje } = usePersonal()
+import { PersonalSchema } from '../schemas/PersonalSchema';
+import { Field, Form, ErrorMessage } from 'vee-validate';
 
+    let personal = ref<PersonalAgregar>({
+        nombre: '',
+        direccion: '',
+        telefono: '',
+        estatus: 0,
+    })
+
+    const onTodoBien = async () => {
+        await agregarPersonal(personal.value);
+    }
 </script>
 
 <style scoped>
-
+    .errorValidacion {
+        color: red;
+        font-weight: bold;
+    }
 </style>
