@@ -1,5 +1,3 @@
-<!--Boton Editar el registro-->
-<!--Se copio el codigo de PersonalAgregarVue.vue-->
 <template>
     <div class="container mt-5" v-if="personal[0]">
         <div class="card">
@@ -41,13 +39,35 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
-import { useRoute } from 'vue-router';
+import { ref } from 'vue';
 import { usePersonal } from '../controladores/usePersonal';
 const { traePersonalId, actualizarPersonal, mensaje, personal } = usePersonal()
 //Traer los datos del registro de cada id
 let idPersona = 0
 const route = useRoute()
+
+
+//-----------------Redirigiendo al usuario a la pagina de inicio
+//Importamos watch para redirlo y se elimina ref
+import { onMounted, watch  } from 'vue';
+//Importamos useRouter para redirlo
+import { useRoute, useRouter } from 'vue-router';
+//-----------------
+//Nuevo: redirigirlo a la pagina de inicio de articulo
+const routeRedirect = useRouter();
+// Observa cambios en `mensaje` para mostrar el mensaje y luego redirigir
+watch(
+    () => mensaje.value,
+    (newValue) => {
+        if (newValue === 1) {
+            setTimeout(() => {
+                routeRedirect.push('/personal'); // Redirige después de 1 segundos
+            }, 1000); // Espera 1 segundos antes de redirigir
+        }
+    }
+);
+//-----------------
+
 
 onMounted(async() => {
     idPersona = Number(route.params.id);

@@ -1,25 +1,36 @@
 <template>
     <section>
-        <h3></h3>
-        <h3>Personal</h3>
-        <div>
+        <div class="botones">
             <!--Boton para agregar un nuevo registro-->
             <RouterLink :to = "{path: '/personal/agregar'}">
                 <button class="btn btn-sm btn-outline-primary">
                     Agregar <i class="fa fa-plus"></i>
                 </button>
             </RouterLink>
+            &nbsp;
+            <!--Boton para imprimir-->
+            <button @click.prevent="personalPDF" class="btn btn-sm btn-outline-primary" v-if="personal.length > 0">
+                Imprimir <i class="fa fa-print"></i>
+            </button>
+            &nbsp;
+            <!--Agregamos un boton nuevo para Excel-->
+            <button class="btn btn-sm btn-outline-primary" v-if="personal.length > 0">
+                <download-excel :data="personal" type="xlsx" name="personal.xlsx">
+                    Excel <i class="fa fa-file-excel-o"></i>
+                </download-excel>
+            </button>
         </div>
     </section>
-    <table class="table table-striped">
-        <thead>
+    <table class="table table-striped table-bordered" id="tablaPersonal">
+        <caption><h3>Personal</h3></caption>
+        <thead class="thead-dark">
             <tr>
-                <th>Clave</th>
+                <th>ID</th>
                 <th>Nombre</th>
                 <th>Direccion</th>
                 <th>Telefono</th>
                 <th>Estatus</th>
-                <th></th>
+                <th>Botones de Accion</th>
             </tr>
         </thead>
         <!--Debemos traer los datos de la base de datos, en api, se instala: npm install axios -save-->
@@ -55,6 +66,8 @@
 
 
 <script setup lang="ts">
+    //Importar para imprimir pagina en PDF
+    import html2PDF from 'jspdf-html2canvas';
     import { onMounted } from 'vue'
     import {usePersonal} from '../controladores/usePersonal.ts'
     const { traePersonal,personal } = usePersonal()
@@ -62,6 +75,26 @@
     onMounted(async () => {
         await traePersonal()
     })
+
+    const personalPDF = async () => {
+    const pagina = document.getElementById('tablaPersonal');
+    if (!pagina) {
+        console.error("Elemento 'tablaPersonal' no encontrado.");
+        return;
+    }
+
+    await html2PDF(pagina, {
+        jsPDF: {
+            // Tamaño de hoja
+            format: 'a4',
+        },
+        // Definimos de qué tipo son las imágenes
+        imageType: 'image/jpeg',
+        // Nombre del archivo de salida
+        output: 'personal.pdf',
+    });
+};
+
     //load <----- Carga en memoria
     //mounted <----- Cargada y se ve en la pantala
 </script>
@@ -76,5 +109,32 @@
     .centrado {
         text-align: center;
     }
-
+    caption{
+        caption-side: top;
+        text-align: center;
+        padding: 10px;
+        font-weight: bold;
+    }
+    .thead-dark{
+        background-color: #081c15;
+        color: white;
+    }
+    .table-bordered th,
+    .table-bordered td {
+        border: 1px solid #081c15;
+        padding: 8px;
+        text-align: center;
+        font-weight: bold;
+    }
+    .botones {
+        display: flex;
+        justify-content: flex-start;
+        gap: 10px;
+        margin-left: 20px;
+        margin-top: 20px;
+    }
+    h3{
+        color: #081c15;
+        font-weight: bold;
+    }
 </style>

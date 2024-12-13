@@ -1,6 +1,7 @@
-<!--Iniciar Sesion-->
+<!--REGISTRARSE-->
 <template>
-    <div class="contenedor">
+    <div class="contededor_padre">
+        <div class="contenedor">
         <form @submit.prevent="entradaUsuario" class="formulario">
             <h2>Validacion de usuario</h2>
             <div class="grupo">
@@ -23,51 +24,66 @@
                 {{ error }}
             </div>
             <button type="submit">
-                Iniciar Sesion
+                Registrarse
             </button>
         </form>
+    </div>
     </div>
 </template>
 
 <script setup lang="ts">
     import { ref } from 'vue';
     import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
-    import { useRouter } from 'vue-router'
-    import '../../../firebase/config'
-
-
+    import { useRouter } from 'vue-router';
+    import '../../../firebase/config.js';
     const correo = ref('');
-    const clave = ref('')
-    const error = ref(null)
-    const router = useRouter()
+    const clave = ref('');
+    const error = ref(null);
+    const router = useRouter();
 
     const entradaUsuario = async () => {
-        error.value = null
-        try{
-            const auth = getAuth()
-            await signInWithEmailAndPassword(auth, correo.value, clave.value)
-            router.push({name:'personal'})
-        } catch (err) {
-            switch(err.code){
+    const error = ref<string | null>(null);
+    
+    try {
+        const auth = getAuth();
+        await signInWithEmailAndPassword(auth, correo.value, clave.value);
+        router.push({ name: 'personal' });
+    } catch (err) {
+        if (err instanceof Error && 'code' in err) {
+            switch ((err as { code: string }).code) {
                 case 'auth/user-not-found':
-                    error.value = "Usuario no encontrado"
+                    error.value = "Usuario no encontrado";
                     break;
                 case 'auth/wrong-password':
-                    error.value = "Contraseña incorrecta"
+                    error.value = "Contraseña incorrecta";
                     break;
                 default:
-                    error.value = "Ocurrio un error al iniciar sesion"
+                    error.value = "Ocurrio un error al iniciar sesion";
                     break;
             }
+        } else {
+            error.value = "Error desconocido.";
         }
     }
+}
+
 </script>
 
 <style scoped>
+    .contededor_padre {
+        width: 100%;
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
     .contenedor{
         max-width: 400px;
         margin: 0px auto;
+        border-radius: 10px;
         padding: 20px;
+        box-shadow: 0px 4px 20px #181b1a; /* Sombra con el mismo color para el borde */
+        background-color: #40916c;
     }
     .formulario{
         display: flex;
@@ -86,15 +102,25 @@
     }
     button{
         padding: 10px;
-        background-color: #4CAF50;
-        color: white;
+        background-color: #95d5b2;
+        color: #081c15;
         border: none;
         border-radius: 5px;
         cursor: pointer;
+        width: 60%;
+        align-self: center;
+        font-weight: bold;
     }
     .error{
         color: red;
         font-size: 0.9em;
         margin-top: 0.5em;
+    }
+    h2{
+        color: white;
+    }
+    label{
+        font-weight: bold;
+        color: #081c15;
     }
 </style>

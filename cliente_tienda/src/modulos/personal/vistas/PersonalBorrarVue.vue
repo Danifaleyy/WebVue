@@ -1,5 +1,3 @@
-<!--Boton Editar el registro-->
-<!--Se copio el codigo de PersonalEditarVue.vue-->
 <template>
     <div class="container mt-5" v-if="personal[0]">
         <div class="card">

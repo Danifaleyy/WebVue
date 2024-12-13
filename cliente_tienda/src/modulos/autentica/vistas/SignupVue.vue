@@ -32,35 +32,39 @@
 <script setup lang="ts">
     import { ref } from 'vue';
     import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
-    import { useRouter } from 'vue-router'
-    import '../../../firebase/config'
-
-
+    import { useRouter } from 'vue-router';
+    import '../../../firebase/config.js';
     const correo = ref('');
-    const clave = ref('')
-    const error = ref(null)
-    const router = useRouter()
+    const clave = ref('');
+    const error = ref(null);
+    const router = useRouter();
 
     const registrarUsuario = async () => {
-        error.value = null
-        try{
-            const auth = getAuth()
-            await createUserWithEmailAndPassword(auth, correo.value, clave.value);
-            router.push({name:'bienvenida'})
-        } catch (err) {
-            switch(err.code){
+    const error = ref<string | null>(null);
+    
+    try {
+        const auth = getAuth();
+        await createUserWithEmailAndPassword(auth, correo.value, clave.value);
+        router.push({ name: 'bienvenida' });
+    } catch (err) {
+        if (err instanceof Error && 'code' in err) {
+            switch ((err as { code: string }).code) {
                 case 'auth/email-already-in-use':
-                    error.value = "Este correo ya esta registrado"
+                    error.value = "Este correo ya está registrado";
                     break;
                 case 'auth/weak-password':
-                    error.value = "La contraseña debe tener al menos 6 caracteres"
+                    error.value = "La contraseña debe tener al menos 6 caracteres";
                     break;
                 default:
-                    error.value = "Ocurrio un error durante el registro"
+                    error.value = "Ocurrió un error durante el registro";
                     break;
             }
+        } else {
+            error.value = "Error desconocido.";
         }
     }
+}
+
 </script>
 
 <style scoped>

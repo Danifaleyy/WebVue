@@ -49,6 +49,29 @@ const { agregarPersonal, mensaje } = usePersonal()
 import { PersonalSchema } from '../schemas/PersonalSchema';
 import { Field, Form, ErrorMessage } from 'vee-validate';
 
+
+//-----------------Redirigiendo al usuario a la pagina de inicio
+//Importamos watch para redirlo y se elimina ref
+import { onMounted, watch  } from 'vue';
+//Importamos useRouter para redirlo
+import { useRoute, useRouter } from 'vue-router';
+//-----------------
+//Nuevo: redirigirlo a la pagina de inicio de articulo
+const routeRedirect = useRouter();
+// Observa cambios en `mensaje` para mostrar el mensaje y luego redirigir
+watch(
+    () => mensaje.value,
+    (newValue) => {
+        if (newValue === 1) {
+            setTimeout(() => {
+                routeRedirect.push('/personal'); // Redirige después de 1 segundos
+            }, 1000); // Espera 1 segundos antes de redirigir
+        }
+    }
+);
+//-----------------
+
+
     let personal = ref<PersonalAgregar>({
         nombre: '',
         direccion: '',
