@@ -3,33 +3,33 @@
     <div class="container mt-5">
         <div class="card">
             <div class="card-header">
-                <h4>Agregar Personal</h4>
+                <h4>Agregar Registro</h4>
             </div>
             <div v-if="mensaje == 1" class="alert alert-success" role="alert" >
                 Datos agregados con exito
             </div>
             <div class="card-body">
-                <Form :validation-schema="PersonalSchema" @submit="onTodoBien">
+                <Form :validation-schema="RegistroSchema" @submit="onTodoBien">
                     <div class="mb-3">
-                        Nombre
+                        id
                         <!--v-model=: Es para conectarlo, te permite usar ts en HTML-->
-                        <Field name="nombre" type="text" class="form-control" v-model="personal.nombre"/>
-                        <ErrorMessage name="nombre" class="errorValidacion"/>
+                        <Field name="id" type="number" class="form-control" v-model="registro.id"/>
+                        <ErrorMessage name="id" class="errorValidacion"/>
                     </div>
                     <div class="mb-3">
-                        Direccion
-                        <Field name="direccion" input type="text" class="form-control" v-model="personal.direccion"/>
-                        <ErrorMessage name="direccion" class="errorValidacion"/>
+                        fecha
+                        <Field name="fecha" input type="date" class="form-control" v-model="registro.fecha"/>
+                        <ErrorMessage name="fecha" class="errorValidacion"/>
                     </div>
                     <div class="mb-3">
-                        Telefono
-                        <Field name="telefono" input type="text" class="form-control" v-model="personal.telefono"/>
-                        <ErrorMessage name="telefono" class="errorValidacion"/>
+                        hora
+                        <Field name="hora" input type="text" class="form-control" v-model="registro.hora"/>
+                        <ErrorMessage name="hora" class="errorValidacion"/>
                     </div>
                     <div class="mb-3">
-                        Estatus
-                        <Field name="estatus" input type="text" class="form-control" v-model="personal.estatus"/>
-                        <ErrorMessage name="estatus" class="errorValidacion"/>
+                        movimiento
+                        <Field name="movimiento" input type="text" class="form-control" v-model="registro.movimiento"/>
+                        <ErrorMessage name="movimiento" class="errorValidacion"/>
                     </div>
                     <div class="mb-3">
                         <!--<Field name="nombre" button class="btn btn-primary" @click="agregarPersonal(personal)">Agregar</Field>-->
@@ -43,10 +43,10 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import type { PersonalAgregar } from '../interfaces/personal-interfaces';
-import { usePersonal } from '../controladores/usePersonal';
-const { agregarPersonal, mensaje } = usePersonal()
-import { PersonalSchema } from '../schemas/PersonalSchema';
+import type { RegistroAgregar } from '../interfaces/registro-interfaces';
+import { useRegistro } from '../controladores/useRegistro';
+const { agregarRegistro, mensaje } = useRegistro()
+import { RegistroSchema } from '../schemas/RegistroSchema';
 import { Field, Form, ErrorMessage } from 'vee-validate';
 
 
@@ -64,7 +64,7 @@ watch(
     (newValue) => {
         if (newValue === 1) {
             setTimeout(() => {
-                routeRedirect.push('/personal'); // Redirige después de 1 segundos
+                routeRedirect.push('/registro'); // Redirige después de 1 segundos
             }, 1000); // Espera 1 segundos antes de redirigir
         }
     }
@@ -72,15 +72,15 @@ watch(
 //-----------------
 
 
-    let personal = ref<PersonalAgregar>({
-        nombre: '',
-        direccion: '',
-        telefono: '',
-        estatus: 0,
+    let registro = ref<RegistroAgregar>({
+        id: 0,
+        fecha: new Date(),
+        hora: '',
+        movimiento: 'entrada',
     })
 
     const onTodoBien = async () => {
-        await agregarPersonal(personal.value);
+        await agregarRegistro(registro.value);
     }
 </script>
 

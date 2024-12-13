@@ -1,37 +1,41 @@
 <template>
-    <div class="container mt-5" v-if="personal[0]">
+    <div class="container mt-5" v-if="clientes[0]">
         <div class="card">
             <div class="card-header">
-                <h4>Editar Personal</h4>
+                <h4>Editar Cliente</h4>
             </div>
-            <div v-if="mensaje == 1" class="alert alert-success" role="alert" >
-                Datos actualizados con exito
+            <div v-if="mensaje == 1" class="alert alert-success" role="alert">
+                Datos actualizados con éxito
             </div>
             <div class="card-body">
                 <div class="mb-3">
                     Id
                     <!--v-model=: Es para conectarlo, te permite usar ts en HTML-->
-                    <input type="text" class="form-control" v-model="personal[0].id" disabled>
+                    <input type="text" class="form-control" v-model="clientes[0].id" disabled>
                 </div>
                 <div class="mb-3">
                     Nombre
                     <!--v-model=: Es para conectarlo, te permite usar ts en HTML-->
-                    <input type="text" class="form-control" v-model="personal[0].nombre">
+                    <input type="text" class="form-control" v-model="clientes[0].nombre">
                 </div>
                 <div class="mb-3">
                     Direccion
-                    <input type="text" class="form-control" v-model="personal[0].direccion">
+                    <input type="text" class="form-control" v-model="clientes[0].direccion">
                 </div>
                 <div class="mb-3">
                     Telefono
-                    <input type="text" class="form-control" v-model="personal[0].telefono">
+                    <input type="text" class="form-control" v-model="clientes[0].telefono">
                 </div>
                 <div class="mb-3">
-                    Estatus
-                    <input type="text" class="form-control" v-model="personal[0].estatus">
+                    Correo
+                    <input type="text" class="form-control" v-model="clientes[0].correo_electronico">
                 </div>
                 <div class="mb-3">
-                    <button class="btn btn-primary" @click="actualizarPersonal(personal[0])">Actualizar</button>
+                    Ciudad
+                    <input type="text" class="form-control" v-model="clientes[0].ciudad">
+                </div>
+                <div class="mb-3">
+                    <button class="btn btn-primary" @click="actualizarCliente(clientes[0])">Actualizar</button>
                 </div>
             </div>
         </div>
@@ -40,10 +44,11 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import { usePersonal } from '../controladores/usePersonal';
-const { traePersonalId, actualizarPersonal, mensaje, personal } = usePersonal()
+import { useClientes } from '../controladores/useClientes';
+
+const { traeClienteId, actualizarCliente, mensaje, clientes } = useClientes()
 //Traer los datos del registro de cada id
-let idPersona = 0
+let idCliente = 0
 const route = useRoute()
 
 
@@ -61,7 +66,7 @@ watch(
     (newValue) => {
         if (newValue === 1) {
             setTimeout(() => {
-                routeRedirect.push('/personal'); // Redirige después de 1 segundos
+                routeRedirect.push('/clientes'); // Redirige después de 1 segundos
             }, 1000); // Espera 1 segundos antes de redirigir
         }
     }
@@ -70,11 +75,13 @@ watch(
 
 
 onMounted(async() => {
-    idPersona = Number(route.params.id);
-    await traePersonalId(Number(idPersona))
+    idCliente = Number(route.params.id);
+    await traeClienteId(Number(idCliente))
 })
+
+
 </script>
 
 <style scoped>
-    
+
 </style>

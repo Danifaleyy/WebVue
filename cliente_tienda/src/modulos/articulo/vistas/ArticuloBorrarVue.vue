@@ -1,8 +1,8 @@
 <template>
-    <div class="container mt-5" v-if="personal[0]">
+    <div class="container mt-5" v-if="articulos[0]">
         <div class="card">
             <div class="card-header">
-                <h4>Borrar Personal</h4>
+                <h4>Borrar Articulo</h4>
             </div>
             <div class="alert alert-warning" role="alert" >
                 ¿Seguro que deseas borrar la informacion?
@@ -10,29 +10,29 @@
             </div>
             <div class="card-body">
                 <div class="mb-3">
-                    Id
+                    id_articulo
                     <!--v-model=: Es para conectarlo, te permite usar ts en HTML-->
-                    <input type="text" class="form-control" v-model="personal[0].id" disabled>
+                    <input type="text" class="form-control" v-model="articulos[0].id_articulo" disabled>
                 </div>
                 <div class="mb-3">
-                    Nombre
+                    descripcion
                     <!--v-model=: Es para conectarlo, te permite usar ts en HTML-->
-                    <input type="text" class="form-control" v-model="personal[0].nombre" disabled>
+                    <input type="text" class="form-control" v-model="articulos[0].descripcion" disabled>
                 </div>
                 <div class="mb-3">
-                    Direccion
-                    <input type="text" class="form-control" v-model="personal[0].direccion" disabled>
+                    precio
+                    <input type="text" class="form-control" v-model="articulos[0].precio" disabled>
                 </div>
                 <div class="mb-3">
-                    Telefono
-                    <input type="text" class="form-control" v-model="personal[0].telefono" disabled>
+                    cantidad_almacen
+                    <input type="text" class="form-control" v-model="articulos[0].cantidad_almacen" disabled>
                 </div>
                 <div class="mb-3">
-                    Estatus
-                    <input type="text" class="form-control" v-model="personal[0].estatus" disabled>
+                    fecha_caducidad
+                    <input type="text" class="form-control" v-model="articulos[0].fecha_caducidad" disabled>
                 </div>
                 <div class="mb-3">
-                    <button class="btn btn-danger" @click="borrarPersonal(personal[0])">Borrar</button>
+                    <button class="btn btn-danger" @click="borrarArticulo(articulos[0])">Borrar</button>
                 </div>
             </div>
         </div>
@@ -42,10 +42,10 @@
 <script setup lang="ts">
 import { onMounted, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { usePersonal } from '../controladores/usePersonal';
-const { traePersonalId, borrarPersonal, mensaje, personal } = usePersonal()
+import { useArticulo } from '../controladores/useArticulo';
+const { traeArticuloId, borrarArticulo, mensaje, articulos } = useArticulo()
 //Traer los datos del registro de cada id
-let idPersona = 0
+let idArticulo = 0
 //Para los parametros de la URL
 const route = useRoute()
 //Para moverme de URL: A otra pagina
@@ -54,13 +54,13 @@ const routeRedirect = useRouter()
 watch(
     () => mensaje.value,
     newId => {
-        routeRedirect.push('/personal')
+        routeRedirect.push('/articulos')
     }
 )
 
 onMounted(async() => {
-    idPersona = Number(route.params.id);
-    await traePersonalId(Number(idPersona))
+    idArticulo = Number(route.params.id_articulo);
+    await traeArticuloId(Number(idArticulo))
 })
 </script>
 

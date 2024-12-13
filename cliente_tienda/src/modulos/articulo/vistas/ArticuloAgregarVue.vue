@@ -3,33 +3,33 @@
     <div class="container mt-5">
         <div class="card">
             <div class="card-header">
-                <h4>Agregar Personal</h4>
+                <h4>Agregar Articulo</h4>
             </div>
             <div v-if="mensaje == 1" class="alert alert-success" role="alert" >
                 Datos agregados con exito
             </div>
             <div class="card-body">
-                <Form :validation-schema="PersonalSchema" @submit="onTodoBien">
+                <Form :validation-schema="ArticuloSchema" @submit="onTodoBien">
                     <div class="mb-3">
-                        Nombre
+                        descripcion
                         <!--v-model=: Es para conectarlo, te permite usar ts en HTML-->
-                        <Field name="nombre" type="text" class="form-control" v-model="personal.nombre"/>
-                        <ErrorMessage name="nombre" class="errorValidacion"/>
+                        <Field name="descripcion" type="text" class="form-control" v-model="articulo.descripcion"/>
+                        <ErrorMessage name="descripcion" class="errorValidacion"/>
                     </div>
                     <div class="mb-3">
-                        Direccion
-                        <Field name="direccion" input type="text" class="form-control" v-model="personal.direccion"/>
-                        <ErrorMessage name="direccion" class="errorValidacion"/>
+                        precio
+                        <Field name="precio" input type="number" class="form-control" v-model="articulo.precio"/>
+                        <ErrorMessage name="precio" class="errorValidacion"/>
                     </div>
                     <div class="mb-3">
-                        Telefono
-                        <Field name="telefono" input type="text" class="form-control" v-model="personal.telefono"/>
-                        <ErrorMessage name="telefono" class="errorValidacion"/>
+                        cantidad_almacen
+                        <Field name="cantidad_almacen" input type="number" class="form-control" v-model="articulo.cantidad_almacen"/>
+                        <ErrorMessage name="cantidad_almacen" class="errorValidacion"/>
                     </div>
                     <div class="mb-3">
-                        Estatus
-                        <Field name="estatus" input type="text" class="form-control" v-model="personal.estatus"/>
-                        <ErrorMessage name="estatus" class="errorValidacion"/>
+                        fecha_caducidad
+                        <Field name="fecha_caducidad" input type="date" class="form-control" v-model="articulo.fecha_caducidad"/>
+                        <ErrorMessage name="fecha_caducidad" class="errorValidacion"/>
                     </div>
                     <div class="mb-3">
                         <!--<Field name="nombre" button class="btn btn-primary" @click="agregarPersonal(personal)">Agregar</Field>-->
@@ -43,10 +43,10 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import type { PersonalAgregar } from '../interfaces/personal-interfaces';
-import { usePersonal } from '../controladores/usePersonal';
-const { agregarPersonal, mensaje } = usePersonal()
-import { PersonalSchema } from '../schemas/PersonalSchema';
+import type { ArticuloAgregar } from '../interfaces/articulo-interfaces';
+import { useArticulo } from '../controladores/useArticulo';
+const { agregarArticulo, mensaje } = useArticulo()
+import { ArticuloSchema } from '../schemas/ArticuloSchema';
 import { Field, Form, ErrorMessage } from 'vee-validate';
 
 
@@ -64,7 +64,7 @@ watch(
     (newValue) => {
         if (newValue === 1) {
             setTimeout(() => {
-                routeRedirect.push('/personal'); // Redirige después de 1 segundos
+                routeRedirect.push('/articulos'); // Redirige después de 1 segundos
             }, 1000); // Espera 1 segundos antes de redirigir
         }
     }
@@ -72,15 +72,15 @@ watch(
 //-----------------
 
 
-    let personal = ref<PersonalAgregar>({
-        nombre: '',
-        direccion: '',
-        telefono: '',
-        estatus: 0,
+    let articulo = ref<ArticuloAgregar>({
+        descripcion: '',
+        precio: 0,
+        cantidad_almacen: 0,
+        fecha_caducidad: new Date(),
     })
 
     const onTodoBien = async () => {
-        await agregarPersonal(personal.value);
+        await agregarArticulo(articulo.value);
     }
 </script>
 

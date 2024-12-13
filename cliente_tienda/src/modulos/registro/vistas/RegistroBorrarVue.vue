@@ -1,8 +1,8 @@
 <template>
-    <div class="container mt-5" v-if="personal[0]">
+    <div class="container mt-5" v-if="registros[0]">
         <div class="card">
             <div class="card-header">
-                <h4>Borrar Personal</h4>
+                <h4>Borrar Registro</h4>
             </div>
             <div class="alert alert-warning" role="alert" >
                 ¿Seguro que deseas borrar la informacion?
@@ -10,29 +10,29 @@
             </div>
             <div class="card-body">
                 <div class="mb-3">
-                    Id
+                    id_registro
                     <!--v-model=: Es para conectarlo, te permite usar ts en HTML-->
-                    <input type="text" class="form-control" v-model="personal[0].id" disabled>
+                    <input type="number" class="form-control" v-model="registros[0].id_registro" disabled>
                 </div>
                 <div class="mb-3">
-                    Nombre
+                    id
                     <!--v-model=: Es para conectarlo, te permite usar ts en HTML-->
-                    <input type="text" class="form-control" v-model="personal[0].nombre" disabled>
+                    <input type="number" class="form-control" v-model="registros[0].id" disabled>
                 </div>
                 <div class="mb-3">
-                    Direccion
-                    <input type="text" class="form-control" v-model="personal[0].direccion" disabled>
+                    fecha
+                    <input type="date" class="form-control" v-model="registros[0].fecha" disabled>
                 </div>
                 <div class="mb-3">
-                    Telefono
-                    <input type="text" class="form-control" v-model="personal[0].telefono" disabled>
+                    hora
+                    <input type="text" class="form-control" v-model="registros[0].hora" disabled>
                 </div>
                 <div class="mb-3">
-                    Estatus
-                    <input type="text" class="form-control" v-model="personal[0].estatus" disabled>
+                    movimiento
+                    <input type="text" class="form-control" v-model="registros[0].movimiento" disabled>
                 </div>
                 <div class="mb-3">
-                    <button class="btn btn-danger" @click="borrarPersonal(personal[0])">Borrar</button>
+                    <button class="btn btn-danger" @click="borrarRegistro(registros[0])">Borrar</button>
                 </div>
             </div>
         </div>
@@ -42,10 +42,10 @@
 <script setup lang="ts">
 import { onMounted, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { usePersonal } from '../controladores/usePersonal';
-const { traePersonalId, borrarPersonal, mensaje, personal } = usePersonal()
+import { useRegistro } from '../controladores/useRegistro';
+const { traeRegistroId, borrarRegistro, mensaje, registros } = useRegistro()
 //Traer los datos del registro de cada id
-let idPersona = 0
+let idRegistro = 0
 //Para los parametros de la URL
 const route = useRoute()
 //Para moverme de URL: A otra pagina
@@ -54,13 +54,13 @@ const routeRedirect = useRouter()
 watch(
     () => mensaje.value,
     newId => {
-        routeRedirect.push('/personal')
+        routeRedirect.push('/registro')
     }
 )
 
 onMounted(async() => {
-    idPersona = Number(route.params.id);
-    await traePersonalId(Number(idPersona))
+    idRegistro = Number(route.params.id_registro);
+    await traeRegistroId(Number(idRegistro))
 })
 </script>
 

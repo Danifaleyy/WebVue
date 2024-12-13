@@ -2,60 +2,60 @@
     <section>
         <div class="botones">
             <!--Boton para agregar un nuevo registro-->
-            <RouterLink :to = "{path: '/personal/agregar'}">
+            <RouterLink :to = "{path: '/articulos/agregar'}">
                 <button class="btn btn-sm btn-outline-primary">
                     Agregar <i class="fa fa-plus"></i>
                 </button>
             </RouterLink>
             &nbsp;
             <!--Boton para imprimir-->
-            <button @click.prevent="personalPDF" class="btn btn-sm btn-outline-primary" v-if="personal.length > 0">
+            <button @click.prevent="articuloPDF" class="btn btn-sm btn-outline-primary" v-if="articulos.length > 0">
                 Imprimir <i class="fa fa-print"></i>
             </button>
             &nbsp;
             <!--Agregamos un boton nuevo para Excel-->
-            <button class="btn btn-sm btn-outline-primary" v-if="personal.length > 0">
-                <download-excel :data="personal" type="xlsx" name="personal.xlsx">
+            <button class="btn btn-sm btn-outline-primary" v-if="articulos.length > 0">
+                <download-excel :data="articulos" type="xlsx" name="articulos.xlsx">
                     Excel <i class="fa fa-file-excel-o"></i>
                 </download-excel>
             </button>
         </div>
     </section>
-    <table class="table table-striped table-bordered" id="tablaPersonal">
-        <caption><h3>Personal</h3></caption>
+    <table class="table table-striped table-bordered" id="tablaArticulo">
+        <caption><h3>Articulo</h3></caption>
         <thead class="thead-dark">
             <tr>
                 <th>ID</th>
-                <th>Nombre</th>
-                <th>Direccion</th>
-                <th>Telefono</th>
-                <th>Estatus</th>
+                <th>Descripcion</th>
+                <th>Precio</th>
+                <th>Cantidad En Almacen</th>
+                <th>Fecha De Caducidad</th>
                 <th>Botones de Accion</th>
             </tr>
         </thead>
         <!--Debemos traer los datos de la base de datos, en api, se instala: npm install axios -save-->
         <tbody>
             <!--Cuando no trae datos-->
-            <tr v-if="personal.length == 0">
-                <td class="centrado" colspan="6">Sin personal registrado</td>
+            <tr v-if="articulos.length == 0">
+                <td class="centrado" colspan="6">Sin articulo registrado</td>
             </tr>
             <!--Ciclo for para que muestere tantos como sean-->
-            <tr v-else v-for="(persona,index) in personal" :key="index">
-                <td>{{ persona.id }}</td>
-                <td>{{ persona.nombre }}</td>
-                <td>{{ persona.direccion }}</td>
-                <td>{{ persona.telefono }}</td>
-                <td>{{ persona.estatus }}</td>
+            <tr v-else v-for="(articulo,index) in articulos" :key="index">
+                <td>{{ articulo.id_articulo }}</td>
+                <td>{{ articulo.descripcion}}</td>
+                <td>{{ articulo.precio }}</td>
+                <td>{{ articulo.cantidad_almacen }}</td>
+                <td>{{ articulo.fecha_caducidad }}</td>
                 <!--Botones para modificar y eliminar-->
                 <td class="centrado">
                     <div class="btn-group" role="group" aria-label="Basic outlined example">
                         <button type="button" class="btn btn-sm btn-outline-primary">
                             <!--Boton modificar-->
-                            <RouterLink class="nav-link item" :to = "{path: '/personal/'+ persona.id + '/editar'}"><i class="fa fa-pencil"></i></RouterLink>
+                            <RouterLink class="nav-link item" :to = "{path: '/articulos/'+ articulo.id_articulo + '/editar'}"><i class="fa fa-pencil"></i></RouterLink>
                         </button>
                         <button type="button" class="btn btn-sm btn-outline-danger">
                             <!--Boton eliminar-->
-                            <RouterLink class="nav-link item" :to = "{path: '/personal/'+ persona.id + '/borrar'}"><i class="fa fa-trash"></i></RouterLink>
+                            <RouterLink class="nav-link item" :to = "{path: '/articulos/'+ articulo.id_articulo + '/borrar'}"><i class="fa fa-trash"></i></RouterLink>
                         </button>
                     </div>
                 </td>
@@ -69,17 +69,17 @@
     //Importar para imprimir pagina en PDF
     import html2PDF from 'jspdf-html2canvas';
     import { onMounted } from 'vue'
-    import {usePersonal} from '../controladores/usePersonal.ts'
-    const { traePersonal,personal } = usePersonal()
+    import {useArticulo} from '../controladores/useArticulo'
+    const { traeArticulo, articulos} = useArticulo();
     //Cuando la pagina es visible y esta cargada
     onMounted(async () => {
-        await traePersonal()
-    })
+        await traeArticulo();
+    });
 
-    const personalPDF = async () => {
-    const pagina = document.getElementById('tablaPersonal');
+    const articuloPDF = async () => {
+    const pagina = document.getElementById('tablaArticulo');
     if (!pagina) {
-        console.error("Elemento 'tablaPersonal' no encontrado.");
+        console.error("Elemento 'tablaArticulo' no encontrado.");
         return;
     }
 
@@ -91,7 +91,7 @@
         // Definimos de qué tipo son las imágenes
         imageType: 'image/jpeg',
         // Nombre del archivo de salida
-        output: 'personal.pdf',
+        output: './articulo.pdf',
     });
 };
 
